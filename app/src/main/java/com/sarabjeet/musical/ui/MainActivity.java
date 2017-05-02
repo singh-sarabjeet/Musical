@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(
                     this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION);
         } else {
-            Log.d("PERMISSION","Has Permission");
             getAllAudioFromDevice(this);
         }
     }
@@ -111,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
             case READ_PERMISSION:
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Log.d("Granted PERMISSION","Has Permission");
                     getAllAudioFromDevice(this);
                 }
                 break;
@@ -125,12 +123,10 @@ public class MainActivity extends AppCompatActivity {
     public List<SongModel> getAllAudioFromDevice(final Context context) {
 
         final List<SongModel> tempAudioList = new ArrayList<>();
-        Log.d("AUDIO","I'm Retrieving");
 
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
         Cursor c = context.getContentResolver().query(uri, projection, MediaStore.Audio.Media.DATA + " like ? ", new String[]{MEDIA_PATH}, null);
-
         if (c != null) {
 
             while (c.moveToNext()) {
