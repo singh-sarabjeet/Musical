@@ -110,13 +110,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void checkPermission() {
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionCheck = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION);
-        } else {
-            getAllAudioFromDevice(this);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSION);
+            } else {
+                getAllAudioFromDevice(this);
+            }
         }
     }
 
@@ -180,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         songsRecyclerView.setLayoutManager(linearLayoutManager);
 
         ArtistsAdapter artistsAdapter = new ArtistsAdapter(cursor, this);
-        songsRecyclerView.setAdapter(artistsAdapter);
-        songsRecyclerView.setLayoutManager(linearLayoutManager);
+        artistsRecyclerView.setAdapter(artistsAdapter);
+        artistsRecyclerView.setLayoutManager(linearLayoutManager);
 
     }
 
