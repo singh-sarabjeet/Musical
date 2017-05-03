@@ -6,18 +6,21 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -25,14 +28,25 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.sarabjeet.musical.R;
+import com.sarabjeet.musical.data.SongContract;
 import com.sarabjeet.musical.data.SongModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    String MEDIA_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    final String LOG_TAG = MainActivity.class.getName();
     final int READ_PERMISSION = 1;
+
+    @BindView(R.id.songs_recycler_view)
+    RecyclerView songsRecyclerView;
+    @BindView(R.id.album_recycler_view)
+    RecyclerView albumsRecyclerView;
+    @BindView(R.id.artist_recycler_view)
+    RecyclerView artistsRecyclerView;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         checkPermission();
+        getSupportLoaderManager().initLoader(0, null, this);
 
     }
 
@@ -115,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             default:
-                Toast.makeText(this,"NO Permission",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "NO Permission", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -126,9 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
-        Cursor c = context.getContentResolver().query(uri, projection, MediaStore.Audio.Media.DATA + " like ? ", new String[]{MEDIA_PATH}, null);
+        Cursor c = context.getContentResolver().query(uri, projection, null, null, null);
         if (c != null) {
-
             while (c.moveToNext()) {
                 SongModel SongModel = new SongModel();
                 String path = c.getString(0);
@@ -150,6 +165,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return tempAudioList;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, SongContract.SongData.URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        SongsAdapter songsAdapter = new SongsAdapter(cursor, this);
+        songsRecyclerView.setAdapter(songsAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        songsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        ArtistsAdapter artistsAdapter = new ArtistsAdapter(cursor, this);
+        songsRecyclerView.setAdapter(artistsAdapter);
+        songsRecyclerView.setLayoutManager(linearLayoutManager);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     /**

@@ -23,6 +23,11 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name=".data.SongProvider"
+            android:authorities="com.sarabjeet.musical"
+            android:exported="false" />
+
     </application>
 
 
