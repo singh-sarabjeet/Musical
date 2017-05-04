@@ -28,6 +28,10 @@
             android:authorities="com.sarabjeet.musical"
             android:exported="false" />
 
+        <service
+            android:name=".sync.LibrarySyncIntentService"
+            android:exported="false" />
+
     </application>
 
 

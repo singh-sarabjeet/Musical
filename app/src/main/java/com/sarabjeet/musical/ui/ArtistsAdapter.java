@@ -20,8 +20,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
     private Cursor mCursor;
     private Context mContext;
 
-    public ArtistsAdapter(Cursor cursor, Context context) {
-        mCursor = cursor;
+    public ArtistsAdapter(Context context) {
         mContext = context;
     }
 
@@ -48,7 +47,16 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        int count = 0;
+        if (mCursor != null) {
+            count = mCursor.getCount();
+        }
+        return count;
+    }
+
+    public void setCursor(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -114,6 +114,12 @@ public class SongProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        switch (uriMatcher.match(uri)) {
+            case SONG:
+                db.delete(SongContract.SongData.TABLE_NAME, null, null);
+        }
         return 0;
     }
 

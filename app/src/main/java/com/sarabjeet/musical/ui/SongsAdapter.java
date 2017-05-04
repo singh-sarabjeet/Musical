@@ -20,9 +20,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     private Cursor mCursor;
     private Context mContext;
 
-    public SongsAdapter(Cursor cursor, Context context) {
-        mCursor = cursor;
+    public SongsAdapter(Context context) {
+
         mContext = context;
+    }
+
+    public void setCursor(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -48,7 +53,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        int count = 0;
+        if (mCursor != null) {
+            count = mCursor.getCount();
+        }
+        return count;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
