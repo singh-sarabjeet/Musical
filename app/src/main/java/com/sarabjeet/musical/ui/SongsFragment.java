@@ -16,13 +16,15 @@ import android.view.ViewGroup;
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
+
 /**
  * Created by sarabjeet on 2/5/17.
  */
 
 public class SongsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
+    String[] projection = {COLUMN_TITLE};
     private SongsAdapter songsAdapter;
 
     @Override
@@ -46,7 +48,7 @@ public class SongsFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), SongContract.SongData.URI, null, null, null, null);
+        return new CursorLoader(getActivity(), SongContract.SongData.URI, projection, null, null, COLUMN_TITLE);
     }
 
     @Override

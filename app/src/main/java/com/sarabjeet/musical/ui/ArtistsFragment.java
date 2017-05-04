@@ -15,12 +15,15 @@ import android.view.ViewGroup;
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
+
 /**
  * Created by sarabjeet on 2/5/17.
  */
 
 public class ArtistsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    String[] projection = {"DISTINCT " + COLUMN_ARTIST};
     private ArtistsAdapter artistsAdapter;
 
     @Override
@@ -36,8 +39,14 @@ public class ArtistsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), SongContract.SongData.URI, null, null, null, null);
+        return new CursorLoader(getActivity(), SongContract.SongData.URI, projection, null, null, COLUMN_ARTIST);
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.sarabjeet.musical.data.SongModel;
 
@@ -60,9 +59,6 @@ public class LibrarySyncIntentService extends IntentService {
                 SongModel.setAudioAlbum(album);
                 SongModel.setAudioArtist(artist);
                 SongModel.setAudioPath(path);
-
-                Log.d("Name :" + name, " Album :" + album);
-                Log.d("Path :" + path, " Artist :" + artist);
 
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_TITLE, name);
