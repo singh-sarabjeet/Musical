@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sarabjeet.musical.R;
+import com.squareup.picasso.Picasso;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
@@ -57,9 +58,11 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
             holder.album_art.setAdjustViewBounds(true);
             holder.album_art.setLayoutParams(new LinearLayout.LayoutParams(500, 500));
         } else {
-            holder.album_art.setImageResource(R.drawable.fallback_cover); //any default cover resourse folder
-            holder.album_art.setAdjustViewBounds(true);
-            holder.album_art.setLayoutParams(new LinearLayout.LayoutParams(500, 500));
+            Picasso.with(mContext)
+                    .load(R.drawable.fallback_cover)
+                    .resize(500, 500)
+                    .centerCrop()
+                    .into(holder.album_art);
         }
         holder.album_title.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
 
