@@ -1,10 +1,13 @@
 package com.sarabjeet.musical.ui;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +28,9 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 
 class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
     private Cursor mCursor;
-    private Context mContext;
+    private Activity mContext;
 
-    public AlbumsAdapter(Context context) {
+    public AlbumsAdapter(Activity context) {
         mContext = context;
     }
 
@@ -35,12 +38,6 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.albums_grid_item, parent, false);
         final AlbumsAdapter.ViewHolder vh = new AlbumsAdapter.ViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: Add Action for click
-            }
-        });
         return vh;
     }
 
@@ -83,15 +80,38 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView album_title;
         ImageView album_art;
+        View albumView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             album_title = (TextView) itemView.findViewById(R.id.album_title_textView);
-            album_art = (ImageView) itemView.findViewById(R.id.album_art);
+            albumView = itemView.findViewById(R.id.album_art);
+            album_art = (ImageView) albumView;
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            mCursor.moveToPosition(getAdapterPosition());
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(mCursor.getString(mCursor.getColumnIndex(COLUMN_PATH)));
+
+            byte[] data = mmr.getEmbeddedPicture();
+
+
+            Intent intent = new Intent(mContext, AlbumDetailActivity.class);
+            intent.putExtra("album_cover", data);
+            intent.putExtra("album_title", mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(mContext, albumView, "album_cover");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mContext.startActivity(intent, options.toBundle());
+            } else mContext.startActivity(intent);
         }
 
     }
