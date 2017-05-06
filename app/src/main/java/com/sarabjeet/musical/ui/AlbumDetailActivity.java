@@ -15,10 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
-import com.squareup.picasso.Picasso;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
@@ -29,9 +29,10 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 public class AlbumDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private final float aspectRatio = 1.5f;
-    String[] projection = {COLUMN_TITLE};
+    String[] projection = {COLUMN_TITLE, COLUMN_ALBUM};
     String selection;
     AlbumDetailAdapter albumSongListAdapter;
+    private int maxHeight;
 
 
     @Override
@@ -40,6 +41,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
         setContentView(R.layout.activity_album_detail);
 
         ImageView albumArt = (ImageView) findViewById(R.id.album_art);
+        TextView albumSongTitle = (TextView) findViewById(R.id.album_title_textView);
         RecyclerView albumSongList = (RecyclerView) findViewById(R.id.album_detail_recycler_view);
         albumSongListAdapter = new AlbumDetailAdapter(this);
         albumSongList.setAdapter(albumSongListAdapter);
@@ -47,30 +49,26 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
         albumSongList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
         String albumName = intent.getStringExtra("album_title");
+        albumSongTitle.setText(albumName);
         selection = COLUMN_ALBUM + " = '" + albumName + "'";
         byte[] data = intent.getByteArrayExtra("album_cover");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        }
         if (data != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             albumArt.setImageBitmap(bitmap); //associated cover art in bitmap
             albumArt.setAdjustViewBounds(true);
         } else {
-            Picasso.with(this)
-                    .load(R.drawable.fallback_cover)
-                    .resize(500, 500)
-                    .centerCrop()
-                    .into(albumArt);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
+            albumArt.setImageBitmap(bitmap);
+            albumArt.setAdjustViewBounds(true);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
-            int maxHeight = (int) (albumArt.getMaxWidth() / aspectRatio);
-            albumArt.setMaxHeight(maxHeight);
             getLoaderManager().initLoader(0, null, this);
-        }
-
-
     }
 
     @Override

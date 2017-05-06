@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +86,12 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
         TextView album_title;
         ImageView album_art;
         View albumView;
+        View albumTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            album_title = (TextView) itemView.findViewById(R.id.album_title_textView);
+            albumTitle = itemView.findViewById(R.id.album_title_textView);
+            album_title = (TextView) albumTitle;
             albumView = itemView.findViewById(R.id.album_art);
             album_art = (ImageView) albumView;
             itemView.setOnClickListener(this);
@@ -100,15 +103,15 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
             mCursor.moveToPosition(getAdapterPosition());
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             mmr.setDataSource(mCursor.getString(mCursor.getColumnIndex(COLUMN_PATH)));
-
             byte[] data = mmr.getEmbeddedPicture();
-
 
             Intent intent = new Intent(mContext, AlbumDetailActivity.class);
             intent.putExtra("album_cover", data);
             intent.putExtra("album_title", mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
+            Pair<View, String> p1 = Pair.create(albumView, "album_cover");
+            Pair<View, String> p2 = Pair.create(albumTitle, "album_title_transition");
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(mContext, albumView, "album_cover");
+                    makeSceneTransitionAnimation(mContext, p1, p2);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mContext.startActivity(intent, options.toBundle());
             } else mContext.startActivity(intent);
