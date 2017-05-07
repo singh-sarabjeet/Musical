@@ -72,7 +72,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ViewHold
         @Override
         public void onClick(View v) {
             mCursor.moveToPosition(getAdapterPosition());
-            Intent intent = new Intent(mContext, AlbumDetailActivity.class);
+            Intent intent = new Intent(mContext, ArtistDetailActivity.class);
             intent.putExtra("artist_title", mCursor.getString(mCursor.getColumnIndex(COLUMN_ARTIST)));
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(mContext, artistName, "artist_title_transition");

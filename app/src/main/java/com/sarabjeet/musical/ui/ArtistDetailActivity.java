@@ -5,11 +5,14 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,7 +21,6 @@ import android.widget.TextView;
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
-import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
@@ -40,24 +42,23 @@ public class ArtistDetailActivity extends AppCompatActivity implements LoaderMan
 
         ImageView artistPlaceholderArt = (ImageView) findViewById(R.id.artist_placeholder);
         TextView artistTitle = (TextView) findViewById(R.id.artist_title_textView);
-        RecyclerView albumSongList = (RecyclerView) findViewById(R.id.artist_detail_recycler_view);
+        RecyclerView artistSongList = (RecyclerView) findViewById(R.id.artist_detail_recycler_view);
         artistDetailAdapter = new ArtistDetailAdapter(this);
-        albumSongList.setAdapter(artistDetailAdapter);
+        artistSongList.setAdapter(artistDetailAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        albumSongList.setLayoutManager(linearLayoutManager);
+        artistSongList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
         String artistName = intent.getStringExtra("artist_title");
         artistTitle.setText(artistName);
-        selection = COLUMN_ALBUM + " = '" + artistName + "'";
-
+        selection = COLUMN_ARTIST + " = '" + artistName + "'";
+        Log.d("SELECTION", selection);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
-/*
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.artist_placeholder);*/
-        artistPlaceholderArt.setImageResource(R.drawable.artist_placeholder);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.artist_placeholder);
+        artistPlaceholderArt.setImageBitmap(bitmap);
         artistPlaceholderArt.setAdjustViewBounds(true);
 
 
