@@ -2,6 +2,7 @@ package com.sarabjeet.musical.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sarabjeet.musical.R;
+import com.sarabjeet.musical.sync.MusicPlayerService;
 
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
 
 /**
  * Created by sarabjeet on 7/5/17.
@@ -65,7 +69,12 @@ public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapte
 
         @Override
         public void onClick(View v) {
-            //TODO: on click action for playing music
+            mCursor.moveToPosition(getAdapterPosition());
+            String path = mCursor.getString(mCursor.getColumnIndex(COLUMN_PATH));
+            Intent intent = new Intent(mContext, MusicPlayerService.class);
+            intent.setAction(ACTION_PLAY);
+            intent.putExtra("path", path);
+            mContext.startService(intent);
         }
 
     }

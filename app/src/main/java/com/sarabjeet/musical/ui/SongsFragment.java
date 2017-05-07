@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 /**
@@ -24,7 +25,7 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 public class SongsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    String[] projection = {COLUMN_TITLE};
+    String[] projection = {COLUMN_TITLE, COLUMN_PATH};
     private SongsAdapter songsAdapter;
 
     @Override

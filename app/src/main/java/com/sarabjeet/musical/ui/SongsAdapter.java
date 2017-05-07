@@ -1,6 +1,7 @@
 package com.sarabjeet.musical.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,10 @@ import android.widget.TextView;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
+import com.sarabjeet.musical.sync.MusicPlayerService;
+
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
 
 /**
  * Created by sarabjeet on 4/5/17.
@@ -21,7 +26,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     private Context mContext;
 
     public SongsAdapter(Context context) {
-
         mContext = context;
     }
 
@@ -34,12 +38,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.songs_list_item, parent, false);
         final ViewHolder vh = new ViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: Add Action for click
-            }
-        });
         return vh;
     }
 
@@ -50,7 +48,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
     }
 
-
     @Override
     public int getItemCount() {
         int count = 0;
@@ -60,14 +57,24 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         return count;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView song_title;
 
         public ViewHolder(View itemView) {
             super(itemView);
             song_title = (TextView) itemView.findViewById(R.id.song_title_textView);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            mCursor.moveToPosition(getAdapterPosition());
+            String path = mCursor.getString(mCursor.getColumnIndex(COLUMN_PATH));
+            Intent intent = new Intent(mContext, MusicPlayerService.class);
+            intent.setAction(ACTION_PLAY);
+            intent.putExtra("path", path);
+            mContext.startService(intent);
+        }
     }
 }

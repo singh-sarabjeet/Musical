@@ -3,6 +3,7 @@ package com.sarabjeet.musical.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -27,8 +28,7 @@ import com.squareup.picasso.Picasso;
 public class MainActivity extends AppCompatActivity {
     final String LOG_TAG = MainActivity.class.getName();
     final int READ_PERMISSION = 1;
-
-
+    MediaPlayer mp;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -38,17 +38,16 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mp = new MediaPlayer();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImageView playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
         SlidingUpPanelLayout slidingUpPanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_panel);
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
         checkPermission();
     }
 

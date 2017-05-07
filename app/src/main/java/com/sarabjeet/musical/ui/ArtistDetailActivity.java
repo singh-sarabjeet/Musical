@@ -22,6 +22,7 @@ import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 /**
@@ -30,7 +31,7 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 public class ArtistDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    String[] projection = {COLUMN_TITLE, COLUMN_ARTIST};
+    String[] projection = {COLUMN_TITLE, COLUMN_ARTIST, COLUMN_PATH};
     String selection;
     ArtistDetailAdapter artistDetailAdapter;
 
