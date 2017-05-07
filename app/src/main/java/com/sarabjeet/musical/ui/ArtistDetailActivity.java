@@ -5,8 +5,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,52 +19,47 @@ import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 /**
- * Created by sarabjeet on 6/5/17.
+ * Created by sarabjeet on 7/5/17.
  */
 
-public class AlbumDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    private final float aspectRatio = 1.5f;
-    String[] projection = {COLUMN_TITLE, COLUMN_ALBUM};
+public class ArtistDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    String[] projection = {COLUMN_TITLE, COLUMN_ARTIST};
     String selection;
-    AlbumDetailAdapter albumSongListAdapter;
-    private int maxHeight;
+    ArtistDetailAdapter artistDetailAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album_detail);
+        setContentView(R.layout.activity_artist_detail);
 
-        ImageView albumArt = (ImageView) findViewById(R.id.album_art);
-        TextView albumSongTitle = (TextView) findViewById(R.id.album_title_textView);
-        RecyclerView albumSongList = (RecyclerView) findViewById(R.id.album_detail_recycler_view);
-        albumSongListAdapter = new AlbumDetailAdapter(this);
-        albumSongList.setAdapter(albumSongListAdapter);
+        ImageView artistPlaceholderArt = (ImageView) findViewById(R.id.artist_placeholder);
+        TextView artistTitle = (TextView) findViewById(R.id.artist_title_textView);
+        RecyclerView albumSongList = (RecyclerView) findViewById(R.id.artist_detail_recycler_view);
+        artistDetailAdapter = new ArtistDetailAdapter(this);
+        albumSongList.setAdapter(artistDetailAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         albumSongList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
-        String albumName = intent.getStringExtra("album_title");
-        albumSongTitle.setText(albumName);
-        selection = COLUMN_ALBUM + " = '" + albumName + "'";
-        byte[] data = intent.getByteArrayExtra("album_cover");
+        String artistName = intent.getStringExtra("artist_title");
+        artistTitle.setText(artistName);
+        selection = COLUMN_ALBUM + " = '" + artistName + "'";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
-        if (data != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            albumArt.setImageBitmap(bitmap); //associated cover art in bitmap
-            albumArt.setAdjustViewBounds(true);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fallback_cover);
-            albumArt.setImageBitmap(bitmap);
-            albumArt.setAdjustViewBounds(true);
-        }
+/*
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.artist_placeholder);*/
+        artistPlaceholderArt.setImageResource(R.drawable.artist_placeholder);
+        artistPlaceholderArt.setAdjustViewBounds(true);
+
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -90,11 +83,11 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        albumSongListAdapter.setCursor(data);
+        artistDetailAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        albumSongListAdapter.setCursor(null);
+        artistDetailAdapter.setCursor(null);
     }
 }

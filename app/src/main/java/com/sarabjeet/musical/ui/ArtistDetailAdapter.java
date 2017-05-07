@@ -14,28 +14,28 @@ import com.sarabjeet.musical.R;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 /**
- * Created by sarabjeet on 6/5/17.
+ * Created by sarabjeet on 7/5/17.
  */
 
-public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.ViewHolder> {
+public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapter.ViewHolder> {
     private Context mContext;
     private Cursor mCursor;
 
-    public AlbumDetailAdapter(Activity context) {
+    public ArtistDetailAdapter(Activity context) {
         mContext = context;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.album_song_list_item, parent, false);
-        final AlbumDetailAdapter.ViewHolder vh = new AlbumDetailAdapter.ViewHolder(view);
+    public ArtistDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.artist_song_list_item, parent, false);
+        final ArtistDetailAdapter.ViewHolder vh = new ArtistDetailAdapter.ViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ArtistDetailAdapter.ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        holder.albumSongTitle.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_TITLE)));
+        holder.artistSongTitle.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_TITLE)));
     }
 
     @Override
@@ -54,11 +54,11 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView albumSongTitle;
+        public TextView artistSongTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            albumSongTitle = (TextView) itemView.findViewById(R.id.album_song_title_textView);
+            artistSongTitle = (TextView) itemView.findViewById(R.id.artist_song_title_textView);
             itemView.setOnClickListener(this);
 
         }
