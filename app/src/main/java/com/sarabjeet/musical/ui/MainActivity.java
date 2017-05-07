@@ -16,10 +16,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.sync.LibrarySyncIntentService;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     final String LOG_TAG = MainActivity.class.getName();
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ImageView playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
+        Picasso.with(this)
+                .load(R.drawable.icon_play_small)
+                .into(playButtonSmall);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
