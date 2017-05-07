@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.sync.LibrarySyncIntentService;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,9 +51,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImageView playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
+        SlidingUpPanelLayout slidingUpPanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_panel);
+        ImageView albumArtMini = (ImageView) findViewById(R.id.album_art_mini_player);
+        ImageView albumArtPlayer = (ImageView) findViewById(R.id.album_art_player);
+        ImageView nextButtonSmall = (ImageView) findViewById(R.id.icon_next_small);
         Picasso.with(this)
-                .load(R.drawable.icon_play_small)
+                .load(R.drawable.fallback_cover)
+                .fit()
+                .into(albumArtMini);
+        Picasso.with(this)
+                .load(R.drawable.fallback_cover)
+                .fit()
+                .into(albumArtPlayer);
+        Picasso.with(this)
+                .load(R.drawable.icon_play)
+                .fit()
                 .into(playButtonSmall);
+        Picasso.with(this)
+                .load(R.drawable.icon_next)
+                .fit()
+                .into(nextButtonSmall);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
