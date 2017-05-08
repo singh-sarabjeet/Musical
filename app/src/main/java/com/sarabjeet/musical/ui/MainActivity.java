@@ -60,15 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 .into(albumArtMini);
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)
-                .fit()
                 .into(albumArtPlayer);
         Picasso.with(this)
-                .load(R.drawable.icon_play)
-                .fit()
+                .load(R.drawable.ic_play_arrow)
                 .into(playButtonSmall);
         Picasso.with(this)
-                .load(R.drawable.icon_next)
-                .fit()
+                .load(R.drawable.ic_skip_next)
                 .into(nextButtonSmall);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three

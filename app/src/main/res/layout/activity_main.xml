@@ -99,8 +99,7 @@
             <ImageView
                 android:id="@+id/icon_next_small"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingLeft="8dp" />
+                android:layout_height="50dp" />
         </LinearLayout>
 
         <RelativeLayout
