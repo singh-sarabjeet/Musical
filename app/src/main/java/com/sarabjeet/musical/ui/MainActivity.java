@@ -27,6 +27,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.sync.LibrarySyncIntentService;
 import com.sarabjeet.musical.sync.MusicPlayerService;
@@ -58,13 +60,16 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
         playButtonSmall.setOnClickListener(new View.OnClickListener() {
