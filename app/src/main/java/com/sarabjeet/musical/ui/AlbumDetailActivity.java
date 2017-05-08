@@ -21,6 +21,7 @@ import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
@@ -30,7 +31,7 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 
 public class AlbumDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private final float aspectRatio = 1.5f;
-    String[] projection = {COLUMN_TITLE, COLUMN_ALBUM, COLUMN_PATH};
+    String[] projection = {COLUMN_TITLE, COLUMN_ALBUM, COLUMN_PATH, COLUMN_ARTIST};
     String selection;
     AlbumDetailAdapter albumSongListAdapter;
     private int maxHeight;

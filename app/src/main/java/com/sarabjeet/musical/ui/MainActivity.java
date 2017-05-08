@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -61,15 +62,21 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private AdView mAdView;
+    private TextView songTitle;
+    private TextView songArtist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        songTitle = (TextView) findViewById(R.id.song_title_mini_player);
+        songArtist = (TextView) findViewById(R.id.artist_title_mini_player);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
         playButtonSmall.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
                         albumArtPlayer.setImageBitmap(bitmap);
 
                     }
+                    songTitle.setText(intent.getStringExtra("Title"));
+                    songArtist.setText(intent.getStringExtra("Artist"));
+
                 } else if (s.equals("pause")) {
                     mediaPlayerStatus = "paused";
                 }

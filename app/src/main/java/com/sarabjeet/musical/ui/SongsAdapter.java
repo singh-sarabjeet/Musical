@@ -13,6 +13,7 @@ import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 import com.sarabjeet.musical.sync.MusicPlayerService;
 
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
@@ -76,6 +77,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             intent.setAction(ACTION_PLAY);
             intent.putExtra("path", path);
             intent.putExtra("title", mCursor.getString(mCursor.getColumnIndex(COLUMN_TITLE)));
+            intent.putExtra("artist", mCursor.getString(mCursor.getColumnIndex(COLUMN_ARTIST)));
             mContext.startService(intent);
         }
     }

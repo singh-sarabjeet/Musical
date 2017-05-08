@@ -28,6 +28,8 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     public MediaPlayer mediaPlayer;
     LocalBroadcastManager broadcastManager;
     String path = null;
+    String title = null;
+    String artist = null;
     FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -45,6 +47,8 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         }
         if (intent.getAction().equals(ACTION_PLAY)) {
             path = intent.getStringExtra("path");
+            title = intent.getStringExtra("title");
+            artist = intent.getStringExtra("artist");
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, intent.getStringExtra("title"));
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
@@ -83,6 +87,8 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         Intent intent = new Intent(PLAY);
         intent.putExtra("Player", state);
         intent.putExtra("Path", path);
+        intent.putExtra("Artist", artist);
+        intent.putExtra("Title", title);
         broadcastManager.sendBroadcast(intent);
     }
 
