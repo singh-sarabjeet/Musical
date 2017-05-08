@@ -4,12 +4,19 @@ package com.sarabjeet.musical.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
 
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PAUSE;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_RESUME;
+import static com.sarabjeet.musical.utils.Constants.PLAYER.PLAY;
 
 /**
  * Created by sarabjeet on 8/5/17.
@@ -18,12 +25,18 @@ import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
 public class MusicPlayerService extends Service implements MediaPlayer.OnPreparedListener {
 
     public final String LOG_TAG = "Music.Service";
-    MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
+    LocalBroadcastManager broadcastManager;
+    String path = null;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        broadcastManager = LocalBroadcastManager.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -31,14 +44,25 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
             mediaPlayer = new MediaPlayer();
         }
         if (intent.getAction().equals(ACTION_PLAY)) {
-            mediaPlayer.reset();
+            path = intent.getStringExtra("path");
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, intent.getStringExtra("title"));
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             try {
-                mediaPlayer.setDataSource(intent.getStringExtra("path"));
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(path);
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.prepareAsync();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+        } else if (intent.getAction().equals(ACTION_PAUSE)) {
+            mediaPlayer.pause();
+            updatePlayer("pause");
+        } else if (intent.getAction().equals(ACTION_RESUME)) {
+            mediaPlayer.start();
+            updatePlayer("start");
         }
         return Service.START_STICKY;
     }
@@ -51,7 +75,15 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        updatePlayer("start");
         mp.start();
+    }
+
+    private void updatePlayer(String state) {
+        Intent intent = new Intent(PLAY);
+        intent.putExtra("Player", state);
+        intent.putExtra("Path", path);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override

@@ -1,9 +1,14 @@
 package com.sarabjeet.musical.ui;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -12,23 +17,34 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.sync.LibrarySyncIntentService;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sarabjeet.musical.sync.MusicPlayerService;
 import com.squareup.picasso.Picasso;
 
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PAUSE;
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_RESUME;
+import static com.sarabjeet.musical.utils.Constants.PLAYER.PLAY;
+
 public class MainActivity extends AppCompatActivity {
-    final String LOG_TAG = MainActivity.class.getName();
     final int READ_PERMISSION = 1;
-    MediaPlayer mp;
+    BroadcastReceiver receiver;
+    ImageView playButtonSmall;
+    Context mContext;
+    String mediaPlayerStatus = "initial";
+    ImageView albumArtMini;
+    ImageView albumArtPlayer;
+
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -47,12 +63,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mp = new MediaPlayer();
+        mContext = this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ImageView playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
-        SlidingUpPanelLayout slidingUpPanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_panel);
-        ImageView albumArtMini = (ImageView) findViewById(R.id.album_art_mini_player);
-        ImageView albumArtPlayer = (ImageView) findViewById(R.id.album_art_player);
+        playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
+        playButtonSmall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayerStatus.equals("playing")) {
+                    Picasso.with(mContext)
+                            .load(R.drawable.ic_play_arrow)
+                            .into(playButtonSmall);
+                    Intent intent = new Intent(mContext, MusicPlayerService.class);
+                    intent.setAction(ACTION_PAUSE);
+                    mContext.startService(intent);
+                } else if (mediaPlayerStatus.equals("paused")) {
+                    Picasso.with(mContext)
+                            .load(R.drawable.ic_pause)
+                            .into(playButtonSmall);
+                    Intent intent = new Intent(mContext, MusicPlayerService.class);
+                    intent.setAction(ACTION_RESUME);
+                    mContext.startService(intent);
+                }
+            }
+        });
+        albumArtMini = (ImageView) findViewById(R.id.album_art_mini_player);
+        albumArtPlayer = (ImageView) findViewById(R.id.album_art_player);
         ImageView nextButtonSmall = (ImageView) findViewById(R.id.icon_next_small);
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)
@@ -61,9 +97,15 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)
                 .into(albumArtPlayer);
-        Picasso.with(this)
-                .load(R.drawable.ic_play_arrow)
-                .into(playButtonSmall);
+        if (mediaPlayerStatus.equals("initial") || mediaPlayerStatus.equals("paused")) {
+            Picasso.with(this)
+                    .load(R.drawable.ic_play_arrow)
+                    .into(playButtonSmall);
+        } else {
+            Picasso.with(this)
+                    .load(R.drawable.ic_pause)
+                    .into(playButtonSmall);
+        }
         Picasso.with(this)
                 .load(R.drawable.ic_skip_next)
                 .into(nextButtonSmall);
@@ -79,7 +121,46 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra("Player");
+                String path = intent.getStringExtra("Path");
+                if (s.equals("start")) {
+                    mediaPlayerStatus = "playing";
+                    Picasso.with(context)
+                            .load(R.drawable.ic_pause)
+                            .into(playButtonSmall);
+                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                    mmr.setDataSource(path);
+                    byte[] data = mmr.getEmbeddedPicture();
+                    if (data != null) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        albumArtMini.setImageBitmap(bitmap);
+                        albumArtPlayer.setImageBitmap(bitmap);
+
+                    }
+                } else if (s.equals("pause")) {
+                    mediaPlayerStatus = "paused";
+                }
+            }
+        };
+
         checkPermission();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter(PLAY)
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 
 

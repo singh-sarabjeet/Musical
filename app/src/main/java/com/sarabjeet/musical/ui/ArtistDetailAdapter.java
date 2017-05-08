@@ -74,6 +74,7 @@ public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapte
             Intent intent = new Intent(mContext, MusicPlayerService.class);
             intent.setAction(ACTION_PLAY);
             intent.putExtra("path", path);
+            intent.putExtra("title", mCursor.getString(mCursor.getColumnIndex(COLUMN_TITLE)));
             mContext.startService(intent);
         }
 

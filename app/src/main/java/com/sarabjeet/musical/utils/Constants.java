@@ -9,6 +9,7 @@ public class Constants {
         String MAIN_ACTION = "com.sarabjeet.musical.action.main";
         String ACTION_PLAY = "com.sarabjeet.musical.action.play";
         String ACTION_PAUSE = "com.sarabjeet.musical.action.pause";
+        String ACTION_RESUME = "com.sarabjeet.musical.action.resume";
         String ACTION_PREVIOUS = "com.sarabjeet.musical.action.previous";
         String ACTION_NEXT = "com.sarabjeet.musical.action.next";
         String STARTFOREGROUND_ACTION = "com.sarabjeet.musical.action.startforeground";
@@ -17,5 +18,9 @@ public class Constants {
 
     public interface NOTIFICATION_ID {
         int FOREGROUND_SERVICE = 101;
+    }
+
+    public interface PLAYER {
+        String PLAY = "com.sarabjeet.musical.playbackstarted";
     }
 }
