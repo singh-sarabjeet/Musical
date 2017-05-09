@@ -2,4 +2,13 @@
     <string name="app_name">Musical</string>
     <string name="action_settings">Settings</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+    <string name="album_art">Album art</string>
+    <string name="album_title_transition">album_title_transition</string>
+    <string name="album_art_transition">album_cover</string>
+    <string name="artist_detail_image">Artist Placeholder</string>
+    <string name="artist_title_transition">artist_title_transition</string>
+
+    <string name="intent_extra_album_art">album_cover</string>
+    <string name="intent_extra_album_name">album_title</string>
 </resources>

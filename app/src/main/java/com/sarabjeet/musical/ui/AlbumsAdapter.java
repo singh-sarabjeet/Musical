@@ -106,10 +106,13 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
             byte[] data = mmr.getEmbeddedPicture();
 
             Intent intent = new Intent(mContext, AlbumDetailActivity.class);
-            intent.putExtra("album_cover", data);
-            intent.putExtra("album_title", mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
-            Pair<View, String> p1 = Pair.create(albumView, "album_cover");
-            Pair<View, String> p2 = Pair.create(albumTitle, "album_title_transition");
+            intent.putExtra(mContext.getString(R.string.intent_extra_album_art), data);
+            intent.putExtra(mContext.getString(R.string.intent_extra_album_name),
+                    mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
+            Pair<View, String> p1 =
+                    Pair.create(albumView, mContext.getString(R.string.album_art_transition));
+            Pair<View, String> p2 =
+                    Pair.create(albumTitle, mContext.getString(R.string.album_title_transition));
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(mContext, p1, p2);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

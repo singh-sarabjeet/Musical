@@ -30,11 +30,10 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
  */
 
 public class AlbumDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    private final float aspectRatio = 1.5f;
+
     String[] projection = {COLUMN_TITLE, COLUMN_ALBUM, COLUMN_PATH, COLUMN_ARTIST};
     String selection;
     AlbumDetailAdapter albumSongListAdapter;
-    private int maxHeight;
 
 
     @Override
@@ -50,10 +49,10 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         albumSongList.setLayoutManager(linearLayoutManager);
         Intent intent = getIntent();
-        String albumName = intent.getStringExtra("album_title");
+        String albumName = intent.getStringExtra(getString(R.string.intent_extra_album_name));
         albumSongTitle.setText(albumName);
         selection = COLUMN_ALBUM + " = '" + albumName + "'";
-        byte[] data = intent.getByteArrayExtra("album_cover");
+        byte[] data = intent.getByteArrayExtra(getString(R.string.intent_extra_album_art));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(

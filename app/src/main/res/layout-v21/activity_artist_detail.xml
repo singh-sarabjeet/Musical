@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/artist_placeholder"
             android:layout_width="match_parent"
-            android:contentDescription="Artist Placeholder"
+            android:contentDescription="@string/artist_detail_image"
             android:scaleType="centerCrop"
             app:layout_aspectRatio="150%" />
     </android.support.percent.PercentFrameLayout>
@@ -37,7 +37,7 @@
                 android:paddingRight="16dp"
                 android:paddingTop="8dp"
                 android:textSize="24sp"
-                android:transitionName="artist_title_transition" />
+                android:transitionName="@string/artist_title_transition" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:orientation="vertical">
+    android:clickable="true"
+    android:focusable="true">
 
     <TextView
-        android:id="@+id/album_song_title_textView"
+        android:id="@+id/song_title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:fontFamily="sans-serif"
         android:maxLines="1"
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
         android:textSize="16sp" />
-</LinearLayout>
+
+</RelativeLayout>

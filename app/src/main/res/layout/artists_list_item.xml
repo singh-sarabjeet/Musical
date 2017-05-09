@@ -19,6 +19,5 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
-        android:textSize="16sp"
-        android:transitionName="artist_title_transition" />
+        android:textSize="16sp" />
 </LinearLayout>

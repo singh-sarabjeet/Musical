@@ -1,7 +1,6 @@
 package com.sarabjeet.musical.ui;
 
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -26,7 +25,6 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 public class AlbumsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     String[] projection = {"DISTINCT " + COLUMN_ALBUM, COLUMN_PATH};
     String selection = "(1) GROUP BY " + COLUMN_ALBUM;
-    MediaPlayer mediaPlayer;
     private AlbumsAdapter albumsAdapter;
 
     @Override
@@ -42,6 +40,7 @@ public class AlbumsFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
+
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(0, null, this);
@@ -61,9 +60,5 @@ public class AlbumsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         albumsAdapter.setCursor(null);
-    }
-
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
     }
 }

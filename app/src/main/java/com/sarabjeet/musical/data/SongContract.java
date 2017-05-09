@@ -22,11 +22,7 @@ public class SongContract {
         public static final String COLUMN_ARTIST = "artist";
         public static final String COLUMN_PATH = "path";
 
-        public static Uri makeUriForStock(String symbol) {
-            return URI.buildUpon().appendPath(symbol).build();
-        }
-
-        static String getSongFromUri(Uri queryUri) {
+        public static String getSongFromUri(Uri queryUri) {
             return queryUri.getLastPathSegment();
         }
 
