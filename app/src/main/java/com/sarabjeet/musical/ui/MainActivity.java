@@ -2,14 +2,18 @@ package com.sarabjeet.musical.ui;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +25,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,26 +47,31 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver receiver;
     ImageView playButtonSmall;
     Context mContext;
-    String mediaPlayerStatus = "initial";
     ImageView albumArtMini;
     ImageView albumArtPlayer;
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+    MusicPlayerService musicPlayerService;
+    MediaPlayer mediaPlayer = null;
+    boolean mServiceBound = false;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private AdView mAdView;
     private TextView songTitle;
     private TextView songArtist;
+    private Bitmap bitmap;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mServiceBound = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicPlayerService.MusicBinder musicBinder = (MusicPlayerService.MusicBinder) service;
+            musicPlayerService = musicBinder.getService();
+            mServiceBound = true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +88,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         playButtonSmall = (ImageView) findViewById(R.id.icon_play_small);
         playButtonSmall.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * If the player is already playing, the icon would be that of pause and on click it should be changed
+             * to play button icon. The reverse condition holds for pause state
+             */
             @Override
             public void onClick(View v) {
-                if (mediaPlayerStatus.equals("playing")) {
+                if (mediaPlayer.isPlaying()) {
                     Picasso.with(mContext)
                             .load(R.drawable.ic_play_arrow)
                             .into(playButtonSmall);
                     Intent intent = new Intent(mContext, MusicPlayerService.class);
                     intent.setAction(ACTION_PAUSE);
                     mContext.startService(intent);
-                } else if (mediaPlayerStatus.equals("paused")) {
+                } else {
                     Picasso.with(mContext)
                             .load(R.drawable.ic_pause)
                             .into(playButtonSmall);
@@ -100,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         albumArtMini = (ImageView) findViewById(R.id.album_art_mini_player);
         albumArtPlayer = (ImageView) findViewById(R.id.album_art_player);
         ImageView nextButtonSmall = (ImageView) findViewById(R.id.icon_next_small);
+
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)
                 .fit()
@@ -107,18 +123,13 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)
                 .into(albumArtPlayer);
-        if (mediaPlayerStatus.equals("initial") || mediaPlayerStatus.equals("paused")) {
-            Picasso.with(this)
-                    .load(R.drawable.ic_play_arrow)
-                    .into(playButtonSmall);
-        } else {
-            Picasso.with(this)
-                    .load(R.drawable.ic_pause)
-                    .into(playButtonSmall);
-        }
+        Picasso.with(this)
+                .load(R.drawable.ic_play_arrow)
+                .into(playButtonSmall);
         Picasso.with(this)
                 .load(R.drawable.ic_skip_next)
                 .into(nextButtonSmall);
+
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -136,25 +147,35 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra("Player");
                 String path = intent.getStringExtra("Path");
-                if (s.equals("start")) {
-                    mediaPlayerStatus = "playing";
-                    Picasso.with(context)
-                            .load(R.drawable.ic_pause)
-                            .into(playButtonSmall);
-                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                    mmr.setDataSource(path);
-                    byte[] data = mmr.getEmbeddedPicture();
-                    if (data != null) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        albumArtMini.setImageBitmap(bitmap);
-                        albumArtPlayer.setImageBitmap(bitmap);
 
+                if (mServiceBound) {
+                    mediaPlayer = musicPlayerService.getMediaPlayer();
+                    if (mediaPlayer.isPlaying()) {
+                        Picasso.with(context)
+                                .load(R.drawable.ic_pause)
+                                .into(playButtonSmall);
+                        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                        mmr.setDataSource(path);
+                        byte[] data = mmr.getEmbeddedPicture();
+                        if (data != null) {
+                            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            albumArtMini.setImageBitmap(bitmap);
+                            albumArtPlayer.setImageBitmap(bitmap);
+
+                        }
+                        songTitle.setText(intent.getStringExtra("Title"));
+                        songArtist.setText(intent.getStringExtra("Artist"));
                     }
-                    songTitle.setText(intent.getStringExtra("Title"));
-                    songArtist.setText(intent.getStringExtra("Artist"));
 
-                } else if (s.equals("pause")) {
-                    mediaPlayerStatus = "paused";
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            Picasso.with(mContext)
+                                    .load(R.drawable.ic_play_arrow)
+                                    .into(playButtonSmall);
+                        }
+                    });
+
                 }
             }
         };
@@ -165,14 +186,52 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent = new Intent(this, MusicPlayerService.class);
+        intent.setAction("SERVICE_START");
+        startService(intent);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        Log.d("ON_START", "Starting Service");
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
                 new IntentFilter(PLAY));
     }
 
     @Override
+    protected void onResume() {
+        Log.d("On Resume", "I'm Here");
+        super.onResume();
+        if (mServiceBound) {
+            mediaPlayer = musicPlayerService.getMediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                Log.d("On Resume", "Music Playing");
+                Picasso.with(this)
+                        .load(R.drawable.ic_pause)
+                        .into(playButtonSmall);
+                byte[] data = musicPlayerService.getData();
+                if (data != null) {
+                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    albumArtMini.setImageBitmap(bitmap);
+                    albumArtPlayer.setImageBitmap(bitmap);
+                }
+                songTitle.setText(musicPlayerService.getTitle());
+                songArtist.setText(musicPlayerService.getArtist());
+            } else {
+                Log.d("ON RESUME", "MUSIC PLAYER IS NOT PLAYING");
+                Picasso.with(mContext)
+                        .load(R.drawable.ic_play_arrow)
+                        .into(playButtonSmall);
+            }
+
+        }
+    }
+
+    @Override
     protected void onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onStop();
+        if (mServiceBound) {
+            unbindService(mServiceConnection);
+            mServiceBound = false;
+        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     private void checkPermission() {

@@ -79,12 +79,14 @@
                     android:id="@+id/song_title_mini_player"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/artist_title_mini_player"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="16sp" />
 
             </LinearLayout>
