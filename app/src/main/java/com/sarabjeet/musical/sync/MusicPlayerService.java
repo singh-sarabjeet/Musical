@@ -83,10 +83,10 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
 
         } else if (intent.getAction().equals(ACTION_PAUSE)) {
             mediaPlayer.pause();
-            updatePlayer("pause");
+            updatePlayer();
         } else if (intent.getAction().equals(ACTION_RESUME)) {
             mediaPlayer.start();
-            updatePlayer("start");
+            updatePlayer();
         }
         return Service.START_STICKY;
     }
@@ -113,17 +113,16 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        updatePlayer("start");
+        updatePlayer();
         mp.start();
     }
 
-    private void updatePlayer(String state) {
+    private void updatePlayer() {
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(path);
         data = mmr.getEmbeddedPicture();
         Intent intent = new Intent(PLAY);
-        intent.putExtra("Player", state);
         intent.putExtra("Path", path);
 
         intent.putExtra("Artist", artist);

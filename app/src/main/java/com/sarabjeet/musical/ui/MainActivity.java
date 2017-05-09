@@ -25,7 +25,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String s = intent.getStringExtra("Player");
                 String path = intent.getStringExtra("Path");
 
                 if (mServiceBound) {
@@ -190,19 +188,16 @@ public class MainActivity extends AppCompatActivity {
         intent.setAction("SERVICE_START");
         startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        Log.d("ON_START", "Starting Service");
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
                 new IntentFilter(PLAY));
     }
 
     @Override
     protected void onResume() {
-        Log.d("On Resume", "I'm Here");
         super.onResume();
         if (mServiceBound) {
             mediaPlayer = musicPlayerService.getMediaPlayer();
             if (mediaPlayer.isPlaying()) {
-                Log.d("On Resume", "Music Playing");
                 Picasso.with(this)
                         .load(R.drawable.ic_pause)
                         .into(playButtonSmall);
@@ -215,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
                 songTitle.setText(musicPlayerService.getTitle());
                 songArtist.setText(musicPlayerService.getArtist());
             } else {
-                Log.d("ON RESUME", "MUSIC PLAYER IS NOT PLAYING");
                 Picasso.with(mContext)
                         .load(R.drawable.ic_play_arrow)
                         .into(playButtonSmall);
