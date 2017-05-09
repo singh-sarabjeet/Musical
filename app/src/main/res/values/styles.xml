@@ -9,7 +9,7 @@
     </style>
 
 
-    <style name="AppTheme.Detail">
+    <style name="DetailTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBarOverlay">true</item>
         <item name="colorPrimary">@android:color/transparent</item>
     </style>

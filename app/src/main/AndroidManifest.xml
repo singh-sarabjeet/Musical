@@ -27,11 +27,11 @@
         <activity
             android:name=".ui.AlbumDetailActivity"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.Detail" />
+            android:theme="@style/DetailTheme" />
         <activity
             android:name=".ui.ArtistDetailActivity"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.Detail" />
+            android:theme="@style/DetailTheme" />
 
         <provider
             android:name=".data.SongProvider"

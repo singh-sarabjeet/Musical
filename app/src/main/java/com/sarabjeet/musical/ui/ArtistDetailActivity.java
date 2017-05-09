@@ -40,7 +40,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_detail);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         ImageView artistPlaceholderArt = (ImageView) findViewById(R.id.artist_placeholder);
         TextView artistTitle = (TextView) findViewById(R.id.artist_title_textView);
         RecyclerView artistSongList = (RecyclerView) findViewById(R.id.artist_detail_recycler_view);

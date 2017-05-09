@@ -40,6 +40,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_detail);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ImageView albumArt = (ImageView) findViewById(R.id.album_art);
         TextView albumSongTitle = (TextView) findViewById(R.id.album_title_textView);
