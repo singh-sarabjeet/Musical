@@ -10,11 +10,11 @@ Musical is a powerful android music player that features fluid material design a
  
 ## Using The Source
 
-The Source is easy to use and does not require any registrations or obtaining the keys. Just clone the repository and you are good to go.
+The Source is easy to use. Clone the repository and obtain your version of google-services.json file and paste it in the app folder.
 
 ## Libraries
 
- - [Piccaso](https://github.com/square/picasso)
+ - [Picasso](https://github.com/square/picasso)
  - [Android Sliding Up Panel](https://github.com/umano/AndroidSlidingUpPanel)
  - [ButterKnife](http://jakewharton.github.io/butterknife/)
  
