@@ -13,9 +13,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.sarabjeet.musical.R;
+import com.sarabjeet.musical.data.SongModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_NEXT;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PAUSE;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_RESUME;
@@ -36,6 +40,9 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     String artist = null;
     FirebaseAnalytics mFirebaseAnalytics;
     IBinder mBinder = new MusicBinder();
+    ArrayList<SongModel> playList;
+    int trackIndex;
+    SongModel model;
 
     public String getTitle() {
         return title;
@@ -66,9 +73,15 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         }
         if (intent.getAction().equals("SERVICE_START")) {
         } else if (intent.getAction().equals(ACTION_PLAY)) {
-            path = intent.getStringExtra("path");
-            title = intent.getStringExtra("title");
-            artist = intent.getStringExtra("artist");
+            Bundle playListBundle = intent.getExtras();
+            if (playListBundle != null) {
+                playList = (ArrayList<SongModel>) playListBundle.getSerializable(getString(R.string.playlist));
+            }
+            model = playList.get(0);
+            trackIndex = 0;
+            path = model.getAudioPath();
+            title = model.getAudioTitle();
+            artist = model.getAudioArtist();
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, intent.getStringExtra("title"));
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
@@ -87,6 +100,21 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         } else if (intent.getAction().equals(ACTION_RESUME)) {
             mediaPlayer.start();
             updatePlayer();
+        } else if (intent.getAction().equals(ACTION_NEXT)) {
+            if (++trackIndex < playList.size()) {
+                model = playList.get(trackIndex);
+                path = model.getAudioPath();
+                title = model.getAudioTitle();
+                artist = model.getAudioArtist();
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(path);
+                    mediaPlayer.setOnPreparedListener(this);
+                    mediaPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return Service.START_STICKY;
     }

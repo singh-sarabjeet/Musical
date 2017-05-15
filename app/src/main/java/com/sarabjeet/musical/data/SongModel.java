@@ -1,10 +1,12 @@
 package com.sarabjeet.musical.data;
 
+import java.io.Serializable;
+
 /**
  * Created by sarabjeet on 3/5/17.
  */
 
-public class SongModel {
+public class SongModel implements Serializable {
     private String audioPath;
     private String audioTitle;
     private String audioAlbum;

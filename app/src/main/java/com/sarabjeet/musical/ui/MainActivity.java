@@ -37,6 +37,7 @@ import com.sarabjeet.musical.sync.LibrarySyncIntentService;
 import com.sarabjeet.musical.sync.MusicPlayerService;
 import com.squareup.picasso.Picasso;
 
+import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_NEXT;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PAUSE;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_RESUME;
 import static com.sarabjeet.musical.utils.Constants.PLAYER.PLAY;
@@ -114,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
         albumArtMini = (ImageView) findViewById(R.id.album_art_mini_player);
         albumArtPlayer = (ImageView) findViewById(R.id.album_art_player);
         ImageView nextButtonSmall = (ImageView) findViewById(R.id.icon_next_small);
+
+        nextButtonSmall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MusicPlayerService.class);
+                intent.setAction(ACTION_NEXT);
+                mContext.startService(intent);
+            }
+        });
 
         Picasso.with(this)
                 .load(R.drawable.fallback_cover)

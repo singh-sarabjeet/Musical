@@ -14,4 +14,6 @@
 
     <string name="widget_song_title">Title</string>
     <string name="widget_song_artist">Artist</string>
+
+    <string name="playlist">PlayList</string>
 </resources>

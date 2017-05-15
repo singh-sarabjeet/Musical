@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,10 @@ import android.widget.TextView;
 
 import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.sync.MusicPlayerService;
+import com.sarabjeet.musical.utils.Utility;
 
-import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
-import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
+import java.util.ArrayList;
+
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_TITLE;
 import static com.sarabjeet.musical.utils.Constants.ACTION.ACTION_PLAY;
 
@@ -70,13 +72,12 @@ public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapte
 
         @Override
         public void onClick(View v) {
-            mCursor.moveToPosition(getAdapterPosition());
-            String path = mCursor.getString(mCursor.getColumnIndex(COLUMN_PATH));
+            ArrayList playList = new Utility().getPlaylist(mCursor, getAdapterPosition());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(mContext.getString(R.string.playlist), playList);
             Intent intent = new Intent(mContext, MusicPlayerService.class);
             intent.setAction(ACTION_PLAY);
-            intent.putExtra("path", path);
-            intent.putExtra("title", mCursor.getString(mCursor.getColumnIndex(COLUMN_TITLE)));
-            intent.putExtra("artist", mCursor.getString(mCursor.getColumnIndex(COLUMN_ARTIST)));
+            intent.putExtras(bundle);
             mContext.startService(intent);
         }
 
