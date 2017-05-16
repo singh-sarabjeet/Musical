@@ -2,41 +2,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/widget_background"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/widget_album_art"
-        android:layout_width="83dp"
-        android:layout_height="83dp" />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+        <ImageView
+            android:id="@+id/widget_album_art"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/kanye" />
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="3"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/widget_song_title"
+            android:id="@+id/widget_artist_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="@string/widget_song_title" />
+            android:text="Kanye West"
+            android:textColor="#969698"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/widget_song_artist"
+            android:id="@+id/widget_track_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="@string/widget_song_artist" />
+            android:text="Gold Digger"
+            android:textColor="@android:color/background_dark"
+            android:textSize="20sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/widget_rewind_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@drawable/rewind" />
+
+            <ImageView
+                android:id="@+id/widget_play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@drawable/play" />
+
+            <ImageView
+                android:id="@+id/widget_next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@drawable/forward" />
+        </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/widget_play_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
 
-    <ImageView
-        android:id="@+id/widget_next_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
 </LinearLayout>
