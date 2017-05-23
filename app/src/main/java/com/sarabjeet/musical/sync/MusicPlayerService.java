@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.sarabjeet.musical.R;
@@ -31,7 +30,6 @@ import static com.sarabjeet.musical.utils.Constants.PLAYER.PLAY;
 
 public class MusicPlayerService extends Service implements MediaPlayer.OnPreparedListener {
 
-    public final String LOG_TAG = "Music.Service";
     public MediaPlayer mediaPlayer;
     byte[] data;
     LocalBroadcastManager broadcastManager;
@@ -61,17 +59,15 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         super.onCreate();
         broadcastManager = LocalBroadcastManager.getInstance(this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        Log.d(LOG_TAG, "In onCreate");
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(LOG_TAG, "In onStartCommand");
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
         }
-        if (intent.getAction().equals("SERVICE_START")) {
+        if (intent.getAction().equals(getString(R.string.default_service_start))) {
         } else if (intent.getAction().equals(ACTION_PLAY)) {
             Bundle playListBundle = intent.getExtras();
             if (playListBundle != null) {
@@ -122,20 +118,17 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(LOG_TAG, "In onBind");
         return mBinder;
 
     }
 
     @Override
     public void onRebind(Intent intent) {
-        Log.d(LOG_TAG, "In onReBind");
         super.onRebind(intent);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(LOG_TAG, "In onUnBind");
         return true;
     }
 
@@ -151,10 +144,14 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
         mmr.setDataSource(path);
         data = mmr.getEmbeddedPicture();
         Intent intent = new Intent(PLAY);
-        intent.putExtra("Path", path);
-
-        intent.putExtra("Artist", artist);
-        intent.putExtra("Title", title);
+        intent.putExtra(getString(R.string.media_path), path);
+        intent.putExtra(getString(R.string.media_artist), artist);
+        intent.putExtra(getString(R.string.media_title), title);
+        if (mediaPlayer.isPlaying()) {
+            intent.putExtra(getString(R.string.mp_state), true);
+        } else {
+            intent.putExtra(getString(R.string.mp_state), false);
+        }
         broadcastManager.sendBroadcast(intent);
     }
 

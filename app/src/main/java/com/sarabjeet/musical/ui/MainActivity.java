@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String path = intent.getStringExtra("Path");
+                String path = intent.getStringExtra(getString(R.string.media_path));
 
                 if (mServiceBound) {
                     mediaPlayer = musicPlayerService.getMediaPlayer();
@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
                             albumArtPlayer.setImageBitmap(bitmap);
 
                         }
-                        songTitle.setText(intent.getStringExtra("Title"));
-                        songArtist.setText(intent.getStringExtra("Artist"));
+                        songTitle.setText(intent.getStringExtra(getString(R.string.media_title)));
+                        songArtist.setText(intent.getStringExtra(getString(R.string.media_artist)));
                     }
 
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = new Intent(this, MusicPlayerService.class);
-        intent.setAction("SERVICE_START");
+        intent.setAction(getString(R.string.default_service_start));
         startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             default:
-                Toast.makeText(this, "Permission to read storage denied. Please restart the app and grant permission", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.permission_error), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

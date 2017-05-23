@@ -17,7 +17,8 @@
         <ImageView
             android:id="@+id/album_art"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/album_art_description" />
 
         <TextView
             android:id="@+id/album_title_textView"

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,7 +52,6 @@ public class ArtistDetailActivity extends AppCompatActivity implements LoaderMan
         String artistName = intent.getStringExtra("artist_title");
         artistTitle.setText(artistName);
         selection = COLUMN_ARTIST + " = '" + artistName + "'";
-        Log.d("SELECTION", selection);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |

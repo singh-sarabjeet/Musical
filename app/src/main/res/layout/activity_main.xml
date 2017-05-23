@@ -65,7 +65,8 @@
                 android:id="@+id/album_art_mini_player"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@android:color/holo_blue_dark" />
+                android:background="@android:color/holo_blue_dark"
+                android:contentDescription="@string/album_art_description" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -94,12 +95,14 @@
             <ImageView
                 android:id="@+id/icon_play_small"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:contentDescription="@string/play_pause_desc" />
 
             <ImageView
                 android:id="@+id/icon_next_small"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:contentDescription="@string/next_desc" />
         </LinearLayout>
 
         <RelativeLayout
@@ -115,7 +118,8 @@
                 android:id="@+id/album_art_player"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/album_art_description" />
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"

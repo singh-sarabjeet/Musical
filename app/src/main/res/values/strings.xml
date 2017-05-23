@@ -16,4 +16,25 @@
     <string name="widget_song_artist">Artist</string>
 
     <string name="playlist">PlayList</string>
+
+    <string name="mp_state">media_player_state</string>
+    <string name="media_path">Path</string>
+    <string name="media_artist">Artist</string>
+    <string name="media_title">Title</string>
+
+    <string name="default_service_start">SERVICE_START</string>
+
+    <string name="permission_error">Permission to read storage denied. Please restart the app and grant permission</string>
+
+    <!--- Content Descriptions -->
+
+    <string name="album_art_description">Album Art</string>
+    <string name="play_pause_desc">Play/Pause</string>
+    <string name="next_desc">Next</string>
+    <string name="previous_desc">Previous</string>
+
+    <!-- Widget -->
+    <string name="default_artist">Kanye West</string>
+    <string name="default_title">Gold Digger</string>
+
 </resources>
