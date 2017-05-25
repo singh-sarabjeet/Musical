@@ -45,7 +45,8 @@ public class LibrarySyncIntentService extends IntentService {
         List<ContentValues> libraryData = new ArrayList<>();
 
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST,};
+        String[] projection = {MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM,
+                MediaStore.Audio.ArtistColumns.ARTIST};
         Cursor c = context.getContentResolver().query(uri, projection, null, null, null);
         if (c != null) {
             while (c.moveToNext()) {
@@ -54,6 +55,7 @@ public class LibrarySyncIntentService extends IntentService {
                 String album = c.getString(1);
                 String artist = c.getString(2);
                 String name = path.substring(path.lastIndexOf("/") + 1);
+                name = name.substring(0, name.lastIndexOf("."));
 
                 SongModel.setAudioTitle(name);
                 SongModel.setAudioAlbum(album);

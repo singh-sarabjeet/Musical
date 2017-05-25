@@ -48,7 +48,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
+        String songDetails = mCursor.getString(mCursor.getColumnIndex(SongContract.SongData.COLUMN_ALBUM))
+                + " - " + mCursor.getString(mCursor.getColumnIndex(SongContract.SongData.COLUMN_ARTIST));
         holder.song_title.setText(mCursor.getString(mCursor.getColumnIndex(SongContract.SongData.COLUMN_TITLE)));
+        holder.songDetail.setText(songDetails);
 
     }
 
@@ -64,10 +67,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView song_title;
+        TextView songDetail;
 
         public ViewHolder(View itemView) {
             super(itemView);
             song_title = (TextView) itemView.findViewById(R.id.song_title_textView);
+            songDetail = (TextView) itemView.findViewById(R.id.song_detail_textView);
             itemView.setOnClickListener(this);
         }
 
