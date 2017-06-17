@@ -5,12 +5,14 @@
 
     <string name="album_art">Album art</string>
     <string name="album_title_transition">album_title_transition</string>
-    <string name="album_art_transition">album_cover</string>
+    <string name="album_art_transition">album_cover_transition</string>
+    <string name="album_artist_transition">album_artist_transition</string>
     <string name="artist_detail_image">Artist Placeholder</string>
     <string name="artist_title_transition">artist_title_transition</string>
 
     <string name="intent_extra_album_art">album_cover</string>
     <string name="intent_extra_album_name">album_title</string>
+    <string name="intent_extra_album_artist">album_artist</string>
 
     <string name="widget_song_title">Title</string>
     <string name="widget_song_artist">Artist</string>

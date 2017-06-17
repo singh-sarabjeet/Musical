@@ -21,6 +21,7 @@ import com.sarabjeet.musical.R;
 import com.squareup.picasso.Picasso;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 
 /**
@@ -63,6 +64,7 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
                     .into(holder.album_art);
         }
         holder.album_title.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
+        holder.albumArtist.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_ARTIST)));
 
     }
 
@@ -87,6 +89,8 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
         ImageView album_art;
         View albumView;
         View albumTitle;
+        View album_artist;
+        TextView albumArtist;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,6 +98,8 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
             album_title = (TextView) albumTitle;
             albumView = itemView.findViewById(R.id.album_art);
             album_art = (ImageView) albumView;
+            album_artist = itemView.findViewById(R.id.album_artist_name_textView);
+            albumArtist = (TextView) album_artist;
             itemView.setOnClickListener(this);
 
         }
@@ -109,12 +115,17 @@ class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
             intent.putExtra(mContext.getString(R.string.intent_extra_album_art), data);
             intent.putExtra(mContext.getString(R.string.intent_extra_album_name),
                     mCursor.getString(mCursor.getColumnIndex(COLUMN_ALBUM)));
+            intent.putExtra(mContext.getString(R.string.intent_extra_album_artist),
+                    mCursor.getString(mCursor.getColumnIndex(COLUMN_ARTIST)));
             Pair<View, String> p1 =
                     Pair.create(albumView, mContext.getString(R.string.album_art_transition));
             Pair<View, String> p2 =
                     Pair.create(albumTitle, mContext.getString(R.string.album_title_transition));
+            Pair<View, String> p3 =
+                    Pair.create(album_artist, mContext.getString(R.string.album_artist_transition));
+
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(mContext, p1, p2);
+                    makeSceneTransitionAnimation(mContext, p1, p2, p3);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mContext.startActivity(intent, options.toBundle());
             } else mContext.startActivity(intent);

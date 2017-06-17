@@ -16,6 +16,7 @@ import com.sarabjeet.musical.R;
 import com.sarabjeet.musical.data.SongContract;
 
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ALBUM;
+import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_ARTIST;
 import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
 
 /**
@@ -23,7 +24,7 @@ import static com.sarabjeet.musical.data.SongContract.SongData.COLUMN_PATH;
  */
 
 public class AlbumsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    String[] projection = {"DISTINCT " + COLUMN_ALBUM, COLUMN_PATH};
+    String[] projection = {"DISTINCT " + COLUMN_ALBUM, COLUMN_PATH, COLUMN_ARTIST};
     String selection = "(1) GROUP BY " + COLUMN_ALBUM;
     private AlbumsAdapter albumsAdapter;
 

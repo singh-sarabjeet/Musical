@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,14 +45,19 @@ public class AlbumDetailActivity extends AppCompatActivity implements LoaderMana
 
         ImageView albumArt = (ImageView) findViewById(R.id.album_art);
         TextView albumSongTitle = (TextView) findViewById(R.id.album_title_textView);
+        TextView albumArtist = (TextView) findViewById(R.id.album_artist);
         RecyclerView albumSongList = (RecyclerView) findViewById(R.id.album_detail_recycler_view);
+
         albumSongListAdapter = new AlbumDetailAdapter(this);
         albumSongList.setAdapter(albumSongListAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         albumSongList.setLayoutManager(linearLayoutManager);
+
         Intent intent = getIntent();
         String albumName = intent.getStringExtra(getString(R.string.intent_extra_album_name));
         albumSongTitle.setText(albumName);
+        Log.d("ARTIST", intent.getStringExtra(getString(R.string.intent_extra_album_artist)));
+        albumArtist.setText(intent.getStringExtra(getString(R.string.intent_extra_album_artist)));
         selection = COLUMN_ALBUM + " = '" + albumName + "'";
         byte[] data = intent.getByteArrayExtra(getString(R.string.intent_extra_album_art));
 
